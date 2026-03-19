@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   ShieldCheck,
   Users,
@@ -14,13 +14,18 @@ import {
   CheckCircle2,
   AlertTriangle,
   ChevronRight,
-  ChevronDown
+  ChevronDown,
+  Menu,
+  X,
+  Mail,
+  Phone,
+  Instagram
 } from 'lucide-react';
 
 const WHATSAPP_NUMBER = "5511999589247"; // Orion WhatsApp
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}?text=Olá! Encontrei a Orion Investigação e Inteligência pelo site e gostaria de falar com um investigador para entender melhor como funciona o serviço.`;
 
-function FadeIn({ children, delay = 0 }: { children: React.ReactNode, delay?: number }) {
+function FadeIn({ children, delay = 0 }: { children: React.ReactNode, delay?: number, key?: React.Key }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,17 +51,17 @@ function OrionLogo({ className = "w-16 h-16" }: { className?: string }) {
         <text x="0" y="24" fontFamily="Impact, system-ui, sans-serif" fontSize="96" fontWeight="900" fill="currentColor" textAnchor="middle" letterSpacing="1" stroke="#020617" strokeWidth="6" paintOrder="stroke fill">ORION</text>
         
         {/* Text Agência de Investigação e Inteligência */}
-        <text x="0" y="56" fontFamily="system-ui, sans-serif" fontSize="18" fontWeight="800" fill="currentColor" textAnchor="middle" letterSpacing="0" stroke="#020617" strokeWidth="4" paintOrder="stroke fill">Agência de Investigação e Inteligência</text>
+        <text x="0" y="58" fontFamily="system-ui, sans-serif" fontSize="21" fontWeight="800" fill="currentColor" textAnchor="middle" letterSpacing="0" stroke="#020617" strokeWidth="4" paintOrder="stroke fill">Agência de Investigação e Inteligência</text>
       </g>
     </svg>
   );
 }
 
-function FAQItem({ question, answer }: { question: string, answer: React.ReactNode }) {
+function FAQItem({ question, answer, id }: { question: string, answer: React.ReactNode, id?: string }) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (
-    <div className="border-b border-white/10 last:border-0">
+    <div id={id} className="border-b border-white/10 last:border-0 scroll-mt-32">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full py-6 flex items-center justify-between text-left focus:outline-none group"
@@ -153,6 +158,7 @@ const faqs = [
     )
   },
   {
+    id: "faq-porque-contratar",
     question: "8. Por que contratar um investigador? Não posso investigar sozinho?",
     answer: (
       <>
@@ -173,17 +179,90 @@ const faqs = [
 ];
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isServicesOpen, setIsServicesOpen] = useState(false);
+
   return (
     <>
       <div className="min-h-screen bg-slate-950 text-slate-300 font-sans selection:bg-amber-500/30">
+      
+      {/* Menu Overlay */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMenuOpen(false)}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100]"
+            />
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="fixed top-0 left-0 bottom-0 w-[85%] max-w-sm bg-slate-950 border-r border-white/10 z-[101] overflow-y-auto flex flex-col shadow-2xl"
+            >
+              <div className="p-6 flex items-center justify-between border-b border-white/10">
+                <span className="text-lg font-bold text-white tracking-widest">MENU</span>
+                <button onClick={() => setIsMenuOpen(false)} className="text-slate-400 hover:text-white p-2 -mr-2">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <div className="p-4 flex flex-col gap-2">
+                <a href="#sobre" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Quem somos</a>
+                
+                <div className="flex flex-col">
+                  <button onClick={() => setIsServicesOpen(!isServicesOpen)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all flex items-center justify-between w-full text-left">
+                    Serviços
+                    <ChevronDown className={`w-5 h-5 transition-transform ${isServicesOpen ? 'rotate-180 text-amber-500' : ''}`} />
+                  </button>
+                  <AnimatePresence>
+                    {isServicesOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden flex flex-col pl-8 pr-4 gap-1"
+                      >
+                        <a href="#servico-conjugal" onClick={() => setIsMenuOpen(false)} className="py-3 text-sm text-slate-400 hover:text-amber-500 border-l border-white/10 pl-4">Investigação Conjugal</a>
+                        <a href="#servico-empresarial" onClick={() => setIsMenuOpen(false)} className="py-3 text-sm text-slate-400 hover:text-amber-500 border-l border-white/10 pl-4">Investigação Empresarial</a>
+                        <a href="#servico-localizacao" onClick={() => setIsMenuOpen(false)} className="py-3 text-sm text-slate-400 hover:text-amber-500 border-l border-white/10 pl-4">Localização de Pessoas</a>
+                        <a href="#servico-patrimonial" onClick={() => setIsMenuOpen(false)} className="py-3 text-sm text-slate-400 hover:text-amber-500 border-l border-white/10 pl-4">Levantamento Patrimonial</a>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                <a href="#metodo" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Método Orion</a>
+                <a href="#depoimentos" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Depoimentos</a>
+                <a href="#faq" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Dúvidas Frequentes</a>
+                <a href="#faq-porque-contratar" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Porque contratar um investigador?</a>
+                <a href="#contato" onClick={() => setIsMenuOpen(false)} className="p-4 text-base font-medium text-slate-300 hover:text-amber-500 hover:bg-white/5 rounded-xl transition-all">Contato</a>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
       {/* Header / Nav */}
       <header className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md border-b border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-2 flex flex-col lg:flex-row items-center justify-between">
-          <div className="w-full lg:w-auto flex items-center justify-between">
-            <OrionLogo className="w-32 h-32 sm:w-40 sm:h-40 md:w-64 md:h-64 text-white drop-shadow-xl -ml-2 sm:-ml-4 shrink-0" />
+          <div className="w-full lg:w-auto flex items-start justify-between">
+            <div className="flex flex-col items-start">
+              <button 
+                onClick={() => setIsMenuOpen(true)} 
+                className="flex flex-col items-center justify-center text-white/70 hover:text-white transition-colors pt-2 pl-3 lg:pl-1"
+              >
+                <span className="text-[9px] font-medium uppercase tracking-widest leading-none mb-0.5">Menu</span>
+                <Menu className="w-6 h-6" />
+              </button>
+              <OrionLogo className="w-36 h-36 sm:w-48 sm:h-48 md:w-72 md:h-72 text-white drop-shadow-xl -ml-2 sm:-ml-4 shrink-0 -mt-5 sm:-mt-8 md:-mt-12" />
+            </div>
             
             {/* Container Direito Mobile */}
-            <div className="flex flex-col items-end gap-2 lg:hidden">
+            <div className="flex flex-col items-end gap-2 lg:hidden pt-2">
               {/* Botão Mobile */}
               <div className="relative">
                 <span className="absolute inline-flex h-full w-full rounded-full bg-amber-500 opacity-40 animate-ping" style={{ animationDuration: '2s' }}></span>
@@ -199,22 +278,22 @@ export default function App() {
               </div>
               
               {/* Tópicos Mobile */}
-              <div className="flex flex-col items-start gap-1 text-[9px] sm:text-[10px] text-slate-400 font-medium leading-tight w-full pl-2">
-                <a href="#servico-conjugal" className="flex items-center gap-1.5 group">
-                  <span className="w-1 h-1 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="group-hover:text-slate-200 transition-colors whitespace-nowrap">Investigação Conjugal</span>
+              <div className="flex flex-col items-start gap-0.5 text-xs sm:text-sm text-slate-300 font-medium leading-tight w-full pl-2 mt-1">
+                <a href="#servico-conjugal" className="flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                  <span className="group-hover:text-white transition-colors whitespace-nowrap">Investigação Conjugal</span>
                 </a>
-                <a href="#servico-empresarial" className="flex items-center gap-1.5 group">
-                  <span className="w-1 h-1 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="group-hover:text-slate-200 transition-colors whitespace-nowrap">Investigação Empresarial</span>
+                <a href="#servico-empresarial" className="flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                  <span className="group-hover:text-white transition-colors whitespace-nowrap">Investigação Empresarial</span>
                 </a>
-                <a href="#servico-localizacao" className="flex items-center gap-1.5 group">
-                  <span className="w-1 h-1 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="group-hover:text-slate-200 transition-colors whitespace-nowrap">Localização de Pessoas</span>
+                <a href="#servico-localizacao" className="flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                  <span className="group-hover:text-white transition-colors whitespace-nowrap">Localização de Pessoas</span>
                 </a>
-                <a href="#servico-patrimonial" className="flex items-center gap-1.5 group">
-                  <span className="w-1 h-1 rounded-full bg-amber-500 shrink-0"></span>
-                  <span className="group-hover:text-slate-200 transition-colors whitespace-nowrap">Levantamento Patrimonial</span>
+                <a href="#servico-patrimonial" className="flex items-center gap-2 group">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
+                  <span className="group-hover:text-white transition-colors whitespace-nowrap">Levantamento Patrimonial</span>
                 </a>
               </div>
             </div>
@@ -229,6 +308,8 @@ export default function App() {
             <a href="#servico-localizacao" className="hover:text-slate-200 transition-colors whitespace-nowrap">Localização de Pessoas</a>
             <span className="w-1 h-1 rounded-full bg-slate-700 shrink-0"></span>
             <a href="#servico-patrimonial" className="hover:text-slate-200 transition-colors whitespace-nowrap">Levantamento Patrimonial</a>
+            <span className="w-1 h-1 rounded-full bg-slate-700 shrink-0"></span>
+            <a href="#contato" className="hover:text-slate-200 transition-colors whitespace-nowrap">Contato</a>
           </div>
 
           <div className="hidden lg:flex items-center gap-6">
@@ -345,7 +426,7 @@ export default function App() {
         </section>
 
         {/* About Section */}
-        <section className="py-24 bg-slate-900/50 px-6 border-y border-white/5">
+        <section id="sobre" className="py-24 bg-slate-900/50 px-6 border-y border-white/5 scroll-mt-32">
           <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
             <FadeIn>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Sobre a Orion Investigação e Inteligência</h2>
@@ -390,7 +471,7 @@ export default function App() {
         </section>
 
         {/* Method Section */}
-        <section className="py-24 px-6">
+        <section id="metodo" className="py-24 px-6 scroll-mt-32">
           <div className="max-w-4xl mx-auto text-center">
             <FadeIn>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Método Orion</h2>
@@ -594,7 +675,7 @@ export default function App() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-24 bg-slate-900/50 px-6 border-y border-white/5">
+        <section id="depoimentos" className="py-24 bg-slate-900/50 px-6 border-y border-white/5 scroll-mt-32">
           <div className="max-w-7xl mx-auto">
             <FadeIn>
               <div className="text-center mb-16">
@@ -686,7 +767,7 @@ export default function App() {
           </div>
         </section>
         {/* FAQ Section */}
-        <section className="py-24 px-6 bg-slate-900 border-t border-white/5 relative overflow-hidden">
+        <section id="faq" className="py-24 px-6 bg-slate-900 border-t border-white/5 relative overflow-hidden scroll-mt-32">
           <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
           <div className="max-w-3xl mx-auto relative z-10">
             <FadeIn>
@@ -704,7 +785,7 @@ export default function App() {
             <div className="bg-slate-950/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl">
               {faqs.map((faq, index) => (
                 <FadeIn key={index} delay={index * 0.1}>
-                  <FAQItem question={faq.question} answer={faq.answer} />
+                  <FAQItem id={faq.id} question={faq.question} answer={faq.answer} />
                 </FadeIn>
               ))}
             </div>
@@ -728,23 +809,40 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-950 border-t border-white/5 py-12 px-6">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left mb-8">
-          <div>
+      <footer id="contato" className="bg-slate-950 border-t border-white/5 py-12 px-6 scroll-mt-32">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-10 text-center md:text-left mb-12">
+          <div className="flex-1">
             <div className="flex items-center justify-center md:justify-start mb-6">
               <OrionLogo className="w-20 h-20 text-white opacity-90" />
             </div>
-            <p className="text-slate-500 text-sm max-w-md">
+            <p className="text-slate-500 text-sm max-w-md mx-auto md:mx-0">
               Investigação profissional conduzida com sigilo, estratégia e tecnologia. Todos os atendimentos são realizados com confidencialidade absoluta.
             </p>
           </div>
-          <div className="flex flex-col items-center md:items-end gap-4">
+          
+          <div className="flex-1 flex flex-col items-center md:items-start gap-4">
+            <h4 className="text-slate-200 font-semibold text-lg mb-2">Contato</h4>
+            <a href="mailto:orionsp.inteligencia@gmail.com" className="flex items-center gap-3 text-slate-400 hover:text-amber-500 transition-colors text-sm">
+              <Mail className="w-4 h-4 text-amber-500 shrink-0" />
+              orionsp.inteligencia@gmail.com
+            </a>
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-slate-400 hover:text-amber-500 transition-colors text-sm">
+              <Phone className="w-4 h-4 text-amber-500 shrink-0" />
+              5511 99958-9247
+            </a>
+            <a href="https://instagram.com/orion_inteligencia" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-slate-400 hover:text-amber-500 transition-colors text-sm">
+              <Instagram className="w-4 h-4 text-amber-500 shrink-0" />
+              @orion_inteligencia
+            </a>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center md:items-end gap-6">
             <div className="flex items-center gap-2 text-slate-200 font-bold text-lg bg-slate-900/80 px-5 py-2.5 rounded-full border border-white/10 shadow-lg">
               <Lock className="w-5 h-5 text-amber-500" />
               <span>Site Seguro</span>
             </div>
-            <div className="text-slate-600 text-sm">
-              &copy; 2023 Orion Investigação e Inteligência. Todos os direitos reservados.
+            <div className="text-slate-600 text-sm text-center md:text-right">
+              &copy; 2023 Orion Investigação e Inteligência.<br className="hidden md:block" /> Todos os direitos reservados.
             </div>
           </div>
         </div>
