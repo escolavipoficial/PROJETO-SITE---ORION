@@ -278,7 +278,7 @@ export default function App() {
               </div>
               
               {/* Tópicos Mobile */}
-              <div className="flex flex-col items-start gap-0.5 text-xs sm:text-sm text-slate-300 font-medium leading-tight w-full pl-2 mt-1">
+              <div className="flex flex-col items-start gap-1.5 sm:gap-2 text-xs sm:text-sm text-slate-300 font-medium leading-tight w-full pl-2 mt-2">
                 <a href="#servico-conjugal" className="flex items-center gap-2 group">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shrink-0"></span>
                   <span className="group-hover:text-white transition-colors whitespace-nowrap">Investigação Conjugal</span>
@@ -300,7 +300,7 @@ export default function App() {
           </div>
           
           {/* Tópicos de Atuação Desktop */}
-          <div className="hidden lg:flex flex-nowrap justify-center items-center gap-2 xl:gap-5 text-sm font-medium text-slate-400 w-full">
+          <div className="hidden lg:flex flex-nowrap justify-center items-center gap-6 xl:gap-10 text-sm font-medium text-slate-400 w-full">
             <a href="#servico-conjugal" className="hover:text-slate-200 transition-colors whitespace-nowrap">Investigação Conjugal</a>
             <span className="w-1 h-1 rounded-full bg-slate-700 shrink-0"></span>
             <a href="#servico-empresarial" className="hover:text-slate-200 transition-colors whitespace-nowrap">Investigação Empresarial</a>
