@@ -331,7 +331,17 @@ export default function App() {
 
       <main>
         {/* Hero Section */}
-        <section className="relative pt-[260px] md:pt-[320px] pb-20 md:pb-32 px-6 overflow-hidden min-h-screen flex flex-col items-center justify-center">
+        <section className="relative pt-[200px] md:pt-[240px] pb-20 md:pb-32 px-6 overflow-hidden min-h-screen flex flex-col items-center justify-center">
+          
+          {/* Frase Destacada */}
+          <div className="w-full max-w-4xl mx-auto text-center relative z-10 mb-6 md:mb-8 px-4">
+            <FadeIn>
+              <h2 className="text-lg md:text-xl lg:text-2xl font-outfit font-light text-slate-300 tracking-wide drop-shadow-md">
+                Você sente que tem algo errado, <span className="text-amber-500 font-medium">mas não consegue provar?</span>
+              </h2>
+            </FadeIn>
+          </div>
+
           {/* Imagem */}
           <div 
             className="w-full max-w-5xl mx-auto h-[45vh] md:h-[55vh] relative z-0 shrink-0 bg-[position:center_bottom] md:bg-[position:calc(50%-8vw)_bottom]"
